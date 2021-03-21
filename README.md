@@ -24,6 +24,22 @@ v.import in=file_path out=your_vector_name_in_GRASS_location
 
 ```sh
 # First, set the region to the imported raster.
-# This sets where computations are done
+# This sets where computations are done and the resolution
 g.region rast=your_raster_name
+# Then, convert the vector to a raster that will be used to
+# select a subset of the DEM for analysis.
+# This is not the only way to accomplish this,but is the most straightforward.
+# The last two entries instruct it to give a value of "1" to all of the
+# raster cells where there is a vector polygon; otherwise, these cells
+# will have a NULL value.
+v.to.rast input=your_vector_name output=terraces use=val val=1
+# Next, place the elevations of the terraces into a new raster map
+r.mapcalc "z_terraces = your_DEM * terraces"
+# Our next goal is to link each of these raster cells to the centerline.
+# In order to do this, we must first convert each grid cell to a vector
+# point.
+# You can use the same name for raster and vector data sets;
+# they are stored separately.
+# This will store the elevation in a column named "z"
+r.to.vect in=z_terraces out=z_terraces type=point column=z
 ```
