@@ -20,7 +20,11 @@ r.import in=file_path out=your_raster_name_in_GRASS_location
 v.import in=file_path out=your_vector_name_in_GRASS_location
 ```
 
-## Raster + Vector to vector points (hand-mapped river terraces)
+## Raster (optionally, + Vector) data to vector points (hand-mapped river terraces)
+
+*You may skip this entire step if you already have vector point data.*
+
+### If you have raster data with a vector mask
 
 ```sh
 # First, set the region to the imported raster.
@@ -35,6 +39,13 @@ g.region rast=your_raster_name
 v.to.rast input=your_vector_name output=terraces use=val val=1
 # Next, place the elevations of the terraces into a new raster map
 r.mapcalc "z_terraces = your_DEM * terraces"
+```
+
+### In all cases starting with raster data
+
+*Continue from the above if you have a vector data set to clip the raster, or skip to this step if you do not.*
+
+```
 # Our next goal is to link each of these raster cells to the centerline.
 # In order to do this, we must first convert each grid cell to a vector
 # point.
