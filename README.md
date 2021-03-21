@@ -67,6 +67,19 @@ r.to.vect in=z_terraces out=z_terraces type=point column=z
 # of the point along the line to which you are matching the terrace
 # First, then, we need to add the column.
 v.db.addcolumn map=z_terraces column="valley_dist double precision"
-Then, load the distance along the centerline to the column
+# Then, load the distance along the centerline to the column
 v.distance from=z_terraces to=your_vector_line upload=to_along column=valley_dist
+```
+
+## Data export
+
+*Write data to a CSV*
+
+```sh
+# I find it easiest to simply write the data to a table. It is possible that this
+# will not work on a non-Unix-like OS, in which case we should look at some of the
+# other options (e.g., v.out.ogr, v.out.ascii
+v.db.select map=z_terraces separator=comma > terrace_elevations_along_valley_centerline.csv
+# Hm, alternatively, this should work:
+# v.out.ascii input=z_terraces output=terrace_elevations_along_valley_centerline.csv separator=comma format=point columns=*
 ```
