@@ -20,7 +20,7 @@ r.import in=file_path out=your_raster_name_in_GRASS_location
 v.import in=file_path out=your_vector_name_in_GRASS_location
 ```
 
-## Raster + Vector (hand-mapped river terraces)
+## Raster + Vector to vector points (hand-mapped river terraces)
 
 ```sh
 # First, set the region to the imported raster.
@@ -42,4 +42,20 @@ r.mapcalc "z_terraces = your_DEM * terraces"
 # they are stored separately.
 # This will store the elevation in a column named "z"
 r.to.vect in=z_terraces out=z_terraces type=point column=z
+```
+
+## Connect vector points to distance along line
+
+```sh
+# Import your vector line (river centerline in this example)
+# using v.import (see above) if you have not done so yet.
+# After this, v.distance will find the closest point along the line
+# and will give this distance ("along") as a value within the attribute table
+# of the point data
+# You could add "to_x" and "to_y" to also obtain the E,N coordinates
+# of the point along the line to which you are matching the terrace
+# First, then, we need to add the column.
+v.db.addcolumn map=z_terraces column="valley_dist double precision"
+Then, load the distance along the centerline to the column
+v.distance from=z_terraces to=your_vector_line upload=to_along column=valley_dist
 ```
