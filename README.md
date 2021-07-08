@@ -83,3 +83,17 @@ v.db.select map=z_terraces separator=comma > terrace_elevations_along_valley_cen
 # Hm, alternatively, this should work:
 # v.out.ascii input=z_terraces output=terrace_elevations_along_valley_centerline.csv separator=comma format=point columns=*
 ```
+
+# Python / shapely version
+
+```python
+# Thanks to https://stackoverflow.com/questions/24415806/coordinates-of-the-closest-points-of-two-geometries-in-shapely
+
+from shapely.geometry import LineString, Point
+line = LineString([(0, 0), (5, 7), (12, 6)])
+p = Point(4,8)
+# Length along line that is closest to the point
+print(line.project(p)) # <-- This gives you the length along the line where the point is located
+
+# The selected answer at the aforementioned link has more useful methods/info
+```
