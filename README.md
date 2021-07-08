@@ -1,15 +1,17 @@
 # link-data-to-line
-Basic GRASS GIS routines / pseudocode for linking data sets to (for our purposes) a valley centerline
+Basic GRASS GIS and Python/shapely routines/pseudocode for linking data sets to (for our purposes) a valley centerline
+
+## GRASS GIS
 
 ***These are the basic shell commands that you would type into a computer; Python scripts may be written later, based off of these.***
 
-## To start
+### To start
 
 Define a GRASS GIS region with your chosen projection. (For the group for which I am writing this: WGS 84, UTM 15N.)
 
 Need help? Here's the GRASS GIS reference manual full index: https://grass.osgeo.org/grass79/manuals/full_index.html.
 
-## Import data
+### Import data
 ```sh
 # Raster
 # I always used to use "r.in.gdal". But r.import reprojects on the fly!
@@ -20,11 +22,11 @@ r.import in=file_path out=your_raster_name_in_GRASS_location
 v.import in=file_path out=your_vector_name_in_GRASS_location
 ```
 
-## Raster (optionally, + Vector) data to vector points (hand-mapped river terraces)
+### Raster (optionally, + Vector) data to vector points (hand-mapped river terraces)
 
 *You may skip this entire step if you already have vector point data.*
 
-### If you have raster data with a vector mask
+#### If you have raster data with a vector mask
 
 ```sh
 # First, set the region to the imported raster.
@@ -41,7 +43,7 @@ v.to.rast input=your_vector_name output=terraces use=val val=1
 r.mapcalc "z_terraces = your_DEM * terraces"
 ```
 
-### In all cases starting with raster data
+#### In all cases starting with raster data
 
 *Continue from the above if you have a vector data set to clip the raster, or skip to this step if you do not.*
 
@@ -55,7 +57,7 @@ r.mapcalc "z_terraces = your_DEM * terraces"
 r.to.vect in=z_terraces out=z_terraces type=point column=z
 ```
 
-## Connect vector points to distance along line
+### Connect vector points to distance along line
 
 ```sh
 # Import your vector line (river centerline in this example)
@@ -71,7 +73,7 @@ v.db.addcolumn map=z_terraces column="valley_dist double precision"
 v.distance from=z_terraces to=your_vector_line upload=to_along column=valley_dist
 ```
 
-## Data export
+### Data export
 
 *Write data to a CSV*
 
@@ -84,7 +86,7 @@ v.db.select map=z_terraces separator=comma > terrace_elevations_along_valley_cen
 # v.out.ascii input=z_terraces output=terrace_elevations_along_valley_centerline.csv separator=comma format=point columns=*
 ```
 
-# Python / shapely version
+## Python / shapely
 
 ```python
 # Thanks to https://stackoverflow.com/questions/24415806/coordinates-of-the-closest-points-of-two-geometries-in-shapely
