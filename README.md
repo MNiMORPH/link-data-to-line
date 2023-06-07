@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/349841237.svg)](https://zenodo.org/badge/latestdoi/349841237)
+
 # link-data-to-line
 Basic GRASS GIS and Python/shapely routines/pseudocode for linking data sets to (for our purposes) a valley centerline
 
